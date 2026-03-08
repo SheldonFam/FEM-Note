@@ -2,25 +2,102 @@
 
 :root {
   --background: #ffffff;
-  --foreground: #171717;
+  --foreground: #0e121b;
+  --card: #ffffff;
+  --sidebar: #ffffff;
+  --border: #e0e4ea;
+  --muted: #f5f7fa;
+  --muted-foreground: #525866;
+  --accent: #f3f5f8;
+  --accent-foreground: #0e121b;
+  --primary: #335cff;
+  --primary-foreground: #ffffff;
+  --secondary: #f3f5f8;
+  --secondary-foreground: #525866;
+  --destructive: #fb3748;
+  --destructive-foreground: #ffffff;
+  --ring: #335cff;
+  --tag: #ebf1ff;
+  --font-body: var(--font-inter);
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-card: var(--card);
+  --color-sidebar: var(--sidebar);
+  --color-border: var(--border);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-ring: var(--ring);
+  --color-tag: var(--tag);
+  --font-sans: var(--font-body);
+  --font-serif: var(--font-noto-serif);
+  --font-mono: var(--font-source-code-pro);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+.dark {
+  --background: #0e121b;
+  --foreground: #ffffff;
+  --card: #191b25;
+  --sidebar: #0e121b;
+  --border: #232530;
+  --muted: #191b25;
+  --muted-foreground: #99a0ae;
+  --accent: #232530;
+  --accent-foreground: #ffffff;
+  --primary: #335cff;
+  --primary-foreground: #ffffff;
+  --secondary: #232530;
+  --secondary-foreground: #cacfd8;
+  --destructive: #fb3748;
+  --destructive-foreground: #ffffff;
+  --ring: #335cff;
+  --tag: #232530;
+}
+
+html[data-font-theme="sans"] {
+  --font-body: var(--font-inter);
+}
+
+html[data-font-theme="serif"] {
+  --font-body: var(--font-noto-serif);
+}
+
+html[data-font-theme="mono"] {
+  --font-body: var(--font-source-code-pro);
+}
+
+* {
+  border-color: var(--border);
 }
 
 body {
+  min-height: 100vh;
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-body), sans-serif;
+}
+
+::selection {
+  background: color-mix(in srgb, var(--primary) 20%, transparent);
+}
+
+button,
+input,
+textarea {
+  font: inherit;
+}
+
+a,
+button {
+  cursor: pointer;
 }
