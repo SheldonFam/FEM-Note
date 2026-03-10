@@ -75,17 +75,17 @@ export default function SignupPage() {
         </Button>
       </form>
 
-      <div className="my-6 flex items-center gap-4">
-        <div className="h-px flex-1 bg-border" />
-        <span className="text-xs text-muted-foreground">Or log in with:</span>
-        <div className="h-px flex-1 bg-border" />
+      <div className="mt-4 mb-4 h-px bg-border" />
+
+      <div className="mt-6 mb-4 flex justify-center items-center gap-4">
+        <span className="text-xs text-muted-foreground">Or sign up with:</span>
       </div>
 
       <GoogleButton />
 
-      <div className="mt-6 h-px bg-border" />
+      <div className="mt-4 mb-4 h-px bg-border" />
 
-      <p className="mt-4 text-center text-sm text-muted-foreground">
+      <p className="text-center text-sm text-muted-foreground">
         Already have an account?{" "}
         <Link
           href="/login"

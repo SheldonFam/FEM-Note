@@ -26,16 +26,10 @@ export default function LoginPage() {
   }
 
   return (
-    <AuthCard
-      title="Welcome to Note"
-      description="Please log in to continue"
-    >
+    <AuthCard title="Welcome to Note" description="Please log in to continue">
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
         <div>
-          <label
-            htmlFor="email"
-            className="mb-1.5 block text-sm font-medium"
-          >
+          <label htmlFor="email" className="mb-1.5 block text-sm font-medium">
             Email Address
           </label>
           <Input
@@ -76,17 +70,17 @@ export default function LoginPage() {
         </Button>
       </form>
 
-      <div className="my-6 flex items-center gap-4">
-        <div className="h-px flex-1 bg-border" />
+      <div className="mt-4 mb-4 h-px bg-border" />
+
+      <div className="mt-6 mb-4 flex justify-center items-center gap-4">
         <span className="text-xs text-muted-foreground">Or log in with:</span>
-        <div className="h-px flex-1 bg-border" />
       </div>
 
       <GoogleButton />
 
-      <div className="mt-6 h-px bg-border" />
+      <div className="mt-4 mb-4 h-px bg-border" />
 
-      <p className="mt-4 text-center text-sm text-muted-foreground">
+      <p className="text-center text-sm text-muted-foreground">
         No account yet?{" "}
         <Link
           href="/signup"
