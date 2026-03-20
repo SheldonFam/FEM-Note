@@ -2,6 +2,8 @@ import Link from "next/link";
 import { X } from "lucide-react";
 import { toast } from "sonner";
 
+import { Button } from "@/components/ui/button";
+
 function CheckIcon() {
   return (
     <span className="flex size-6 shrink-0 items-center justify-center rounded-full bg-[#21C16B]">
@@ -38,7 +40,7 @@ function ToastContent({
   toastId,
 }: ToastContentProps) {
   return (
-    <div className="flex w-full min-w-[360px] max-w-md items-center gap-3 rounded-lg border border-border bg-card px-4 py-3 shadow-sm">
+    <div className="flex w-full min-w-[min(360px,calc(100vw-2rem))] max-w-md items-center gap-3 rounded-lg border border-border bg-card px-4 py-3 shadow-sm">
       <CheckIcon />
       <p className="flex-1 text-sm text-foreground">{message}</p>
       {linkLabel && linkHref ? (
@@ -50,14 +52,16 @@ function ToastContent({
           {linkLabel}
         </Link>
       ) : null}
-      <button
+      <Button
         type="button"
+        variant="ghost"
+        size="icon"
         onClick={() => toast.dismiss(toastId)}
-        className="shrink-0 text-muted-foreground transition-colors hover:text-foreground"
+        className="size-8 shrink-0 text-muted-foreground hover:text-foreground"
         aria-label="Dismiss"
       >
         <X className="size-4" />
-      </button>
+      </Button>
     </div>
   );
 }

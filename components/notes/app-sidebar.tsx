@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Archive, ChevronRight, Home, Tag } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils";
 
 interface AppSidebarProps {
@@ -36,7 +37,7 @@ export function AppSidebar({
   onTagSelect,
 }: AppSidebarProps) {
   return (
-    <aside className="flex h-full flex-col border-b border-border bg-sidebar px-4 py-5 md:border-r md:border-b-0 md:px-5">
+    <aside className="hidden h-full flex-col border-r border-border bg-sidebar px-5 py-5 md:flex">
       <div className="mb-8 flex items-center">
         <Link href="/" className="inline-flex items-center">
           <Image
@@ -69,7 +70,7 @@ export function AppSidebar({
                 <Icon className="size-4" />
                 {label}
               </span>
-              <ChevronRight className="size-4" />
+              {isActive ? <ChevronRight className="size-4" /> : null}
             </Link>
           );
         })}
@@ -92,18 +93,19 @@ export function AppSidebar({
         ) : null}
       </div>
 
-      <div className="flex-1 overflow-hidden">
+      <ScrollArea className="flex-1">
         <div className="space-y-1">
           {tags.map((tag) => {
             const isActive = activeTag === tag;
 
             return (
-              <button
+              <Button
                 key={tag}
                 type="button"
+                variant="ghost"
                 onClick={() => onTagSelect?.(isActive ? null : tag)}
                 className={cn(
-                  "flex w-full items-center justify-between rounded-xl px-3 py-2.5 text-left text-sm transition-colors",
+                  "h-auto w-full justify-between rounded-xl px-3 py-2.5 text-sm",
                   isActive
                     ? "bg-accent text-foreground"
                     : "text-muted-foreground hover:bg-accent hover:text-foreground",
@@ -114,11 +116,11 @@ export function AppSidebar({
                   {tag}
                 </span>
                 {isActive ? <ChevronRight className="size-4" /> : null}
-              </button>
+              </Button>
             );
           })}
         </div>
-      </div>
+      </ScrollArea>
     </aside>
   );
 }

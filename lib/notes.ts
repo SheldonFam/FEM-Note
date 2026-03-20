@@ -1,5 +1,5 @@
 import rawNotes from "@/data.json";
-import type { Note, NotesView } from "@/types/note";
+import type { Note } from "@/types/note";
 
 function createNoteId(title: string, index: number) {
   return `${title.toLowerCase().replace(/[^a-z0-9]+/g, "-")}-${index}`;
@@ -20,12 +20,6 @@ export const seededNotes: Note[] = rawNotes.notes
     );
   });
 
-export function getNotesForView(notes: Note[], view: NotesView) {
-  const shouldBeArchived = view === "archived";
-
-  return notes.filter((note) => note.isArchived === shouldBeArchived);
-}
-
 export function collectAllTags(notes: Note[]) {
   return [...new Set(notes.flatMap((note) => note.tags))].sort((left, right) =>
     left.localeCompare(right),
@@ -44,12 +38,14 @@ export function matchesQuery(note: Note, query: string) {
   return searchableValue.includes(query.trim().toLowerCase());
 }
 
+const dateFormatter = new Intl.DateTimeFormat("en-GB", {
+  day: "2-digit",
+  month: "short",
+  year: "numeric",
+});
+
 export function formatNoteDate(dateString: string) {
-  return new Intl.DateTimeFormat("en-GB", {
-    day: "2-digit",
-    month: "short",
-    year: "numeric",
-  }).format(new Date(dateString));
+  return dateFormatter.format(new Date(dateString));
 }
 
 export function parseTags(value: string) {
@@ -59,12 +55,12 @@ export function parseTags(value: string) {
     .filter(Boolean);
 }
 
-export function createDraftNote(): Note {
+export function createNote(): Note {
   const now = new Date().toISOString();
 
   return {
-    id: `draft-${now}`,
-    title: "Untitled Note",
+    id: crypto.randomUUID(),
+    title: "",
     tags: [],
     content: "",
     lastEdited: now,
