@@ -34,9 +34,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning data-font-theme="sans">
+    <html
+      lang="en"
+      suppressHydrationWarning
+      data-font-theme="sans"
+      className={`${inter.variable} ${notoSerif.variable} ${sourceCodePro.variable}`}
+    >
       <body
-        className={`${inter.variable} ${notoSerif.variable} ${sourceCodePro.variable} bg-background font-sans text-foreground antialiased`}
+        className="bg-background text-foreground antialiased"
       >
         <ThemeProvider
           attribute="class"

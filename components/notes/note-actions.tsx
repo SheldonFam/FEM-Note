@@ -17,7 +17,7 @@ export function NoteActions({
   onDelete,
 }: NoteActionsProps) {
   return (
-    <aside className="px-6 py-5 lg:px-6 xl:block">
+    <aside className="hidden px-6 py-5 lg:px-6 xl:block">
       <div className="space-y-3">
         {note?.isArchived ? (
           <Button
