@@ -55,8 +55,13 @@ export function SettingsPanel() {
     getStoredFontTheme(),
   );
 
-  function handleApplyChanges() {
+  function handleApplyThemeChanges() {
     setTheme(pendingTheme ?? currentTheme);
+    setPendingTheme(null);
+    showToast("Settings updated successfully!");
+  }
+
+  function handleApplyFontChanges() {
     applyFontTheme(pendingFontTheme);
     showToast("Settings updated successfully!");
   }
@@ -117,13 +122,13 @@ export function SettingsPanel() {
         <ColorThemeSection
           value={pendingTheme ?? currentTheme}
           onValueChange={setPendingTheme}
-          onApply={handleApplyChanges}
+          onApply={handleApplyThemeChanges}
         />
       ) : resolvedSection === "font" ? (
         <FontThemeSection
           value={pendingFontTheme}
           onValueChange={setPendingFontTheme}
-          onApply={handleApplyChanges}
+          onApply={handleApplyFontChanges}
         />
       ) : (
         <ChangePasswordSection />

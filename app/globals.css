@@ -87,6 +87,10 @@ body {
   font-family: var(--font-body), sans-serif;
 }
 
+html {
+  font-family: var(--font-body), sans-serif;
+}
+
 ::selection {
   background: color-mix(in srgb, var(--primary) 20%, transparent);
 }

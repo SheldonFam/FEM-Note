@@ -67,10 +67,15 @@ export function AppSidebar({
               )}
             >
               <span className="flex items-center gap-3">
-                <Icon className="size-4" />
+                <Icon
+                  className={cn(
+                    "size-4",
+                    isActive ? "text-primary" : "text-muted-foreground",
+                  )}
+                />
                 {label}
               </span>
-              {isActive ? <ChevronRight className="size-4" /> : null}
+              {isActive ? <ChevronRight className="size-4 text-primary" /> : null}
             </Link>
           );
         })}
@@ -112,10 +117,15 @@ export function AppSidebar({
                 )}
               >
                 <span className="flex items-center gap-3">
-                  <Tag className="size-4" />
+                  <Tag
+                    className={cn(
+                      "size-4",
+                      isActive ? "text-primary" : "text-muted-foreground",
+                    )}
+                  />
                   {tag}
                 </span>
-                {isActive ? <ChevronRight className="size-4" /> : null}
+                {isActive ? <ChevronRight className="size-4 text-primary" /> : null}
               </Button>
             );
           })}
