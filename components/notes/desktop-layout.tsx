@@ -98,6 +98,7 @@ export function DesktopLayout({
                 draft={content}
                 onTitleChange={handlers.handleTitleChange}
                 onTagsChange={handlers.handleTagsChange}
+                onTagsBlur={handlers.handleTagsBlur}
                 onContentChange={handlers.handleContentChange}
               />
             ) : (

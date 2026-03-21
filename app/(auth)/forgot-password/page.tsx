@@ -1,17 +1,20 @@
 "use client";
 
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { AuthCard } from "@/components/auth/auth-card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { useForgotPassword } from "@/hooks/use-auth";
 import {
   forgotPasswordSchema,
   type ForgotPasswordFormData,
 } from "@/lib/auth-schemas";
 
 export default function ForgotPasswordPage() {
+  const [submitted, setSubmitted] = useState(false);
   const {
     register,
     handleSubmit,
@@ -20,9 +23,24 @@ export default function ForgotPasswordPage() {
     resolver: zodResolver(forgotPasswordSchema),
   });
 
-  function onSubmit(data: ForgotPasswordFormData) {
-    // TODO: implement password reset email
-    console.log(data);
+  const forgotPassword = useForgotPassword();
+
+  async function onSubmit(data: ForgotPasswordFormData) {
+    await forgotPassword.mutateAsync(data);
+    setSubmitted(true);
+  }
+
+  if (submitted) {
+    return (
+      <AuthCard
+        title="Check your email"
+        description="If that email exists, we've sent a link to reset your password."
+      >
+        <p className="text-center text-sm text-muted-foreground">
+          Didn&apos;t receive it? Check your spam folder.
+        </p>
+      </AuthCard>
+    );
   }
 
   return (
@@ -51,8 +69,8 @@ export default function ForgotPasswordPage() {
           ) : null}
         </div>
 
-        <Button type="submit" className="w-full">
-          Send Reset Link
+        <Button type="submit" className="w-full" disabled={forgotPassword.isPending}>
+          {forgotPassword.isPending ? "Sending..." : "Send Reset Link"}
         </Button>
       </form>
     </AuthCard>

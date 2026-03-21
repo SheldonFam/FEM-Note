@@ -1,11 +1,12 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { ChevronLeft, ChevronRight, Lock, LogOut, Palette, Search, Settings, Type } from "lucide-react";
 import { useTheme } from "next-themes";
 
+import { AuthGuard } from "@/components/auth-guard";
 import { AppSidebar } from "@/components/notes/app-sidebar";
 import { MobileBottomNav } from "@/components/notes/mobile-bottom-nav";
 import { ChangePasswordSection } from "@/components/notes/settings/change-password-section";
@@ -14,12 +15,14 @@ import { FontThemeSection } from "@/components/notes/settings/font-theme-section
 import { showToast } from "@/components/notes/toast-notification";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { useLogout } from "@/hooks/use-auth";
+import { useTags } from "@/hooks/use-notes-queries";
+import { useUpdatePreferences } from "@/hooks/use-notes-mutations";
 import {
   applyFontTheme,
   getStoredFontTheme,
   type FontTheme,
 } from "@/lib/font-theme";
-import { seededNotes } from "@/lib/notes";
 import { cn } from "@/lib/utils";
 
 type ThemeValue = "light" | "dark" | "system";
@@ -41,9 +44,10 @@ function isSectionItem(
 }
 
 export function SettingsPanel() {
-  const tags = useMemo(() => {
-    return [...new Set(seededNotes.flatMap((note) => note.tags))].sort();
-  }, []);
+  const { data: tagsData } = useTags();
+  const tags = (tagsData ?? []).map((t) => t.name);
+  const logoutMutation = useLogout();
+  const updatePrefs = useUpdatePreferences();
   const { theme, setTheme } = useTheme();
   const currentTheme =
     theme === "light" || theme === "dark" || theme === "system"
@@ -56,13 +60,16 @@ export function SettingsPanel() {
   );
 
   function handleApplyThemeChanges() {
-    setTheme(pendingTheme ?? currentTheme);
+    const newTheme = pendingTheme ?? currentTheme;
+    setTheme(newTheme);
     setPendingTheme(null);
+    updatePrefs.mutate({ colorTheme: newTheme });
     showToast("Settings updated successfully!");
   }
 
   function handleApplyFontChanges() {
     applyFontTheme(pendingFontTheme);
+    updatePrefs.mutate({ fontTheme: pendingFontTheme });
     showToast("Settings updated successfully!");
   }
 
@@ -80,10 +87,7 @@ export function SettingsPanel() {
               key={item.id}
               type="button"
               variant="ghost"
-              onClick={() => {
-                // TODO: implement logout
-                console.log("logout");
-              }}
+              onClick={() => logoutMutation.mutate()}
               className="h-auto w-full justify-start gap-3 rounded-xl px-3 py-3 text-sm text-muted-foreground hover:bg-accent hover:text-foreground"
             >
               <Icon className="size-4" />
@@ -137,6 +141,7 @@ export function SettingsPanel() {
   );
 
   return (
+    <AuthGuard>
     <div className="min-h-screen bg-background text-foreground">
       {/* Desktop layout */}
       <div className="hidden min-h-screen md:grid md:grid-cols-[260px_minmax(0,1fr)]">
@@ -214,5 +219,6 @@ export function SettingsPanel() {
         <MobileBottomNav />
       </div>
     </div>
+    </AuthGuard>
   );
 }

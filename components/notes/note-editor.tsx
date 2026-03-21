@@ -12,6 +12,7 @@ interface NoteEditorProps {
   draft: NoteDraft;
   onTitleChange: (value: string) => void;
   onTagsChange: (value: string) => void;
+  onTagsBlur: () => void;
   onContentChange: (value: string) => void;
 }
 
@@ -20,6 +21,7 @@ export function NoteEditor({
   draft,
   onTitleChange,
   onTagsChange,
+  onTagsBlur,
   onContentChange,
 }: NoteEditorProps) {
   return (
@@ -42,6 +44,7 @@ export function NoteEditor({
           aria-label="Note tags"
           value={draft.tags}
           onChange={(event) => onTagsChange(event.target.value)}
+          onBlur={onTagsBlur}
           className="h-auto border-none bg-transparent px-0 text-sm text-foreground shadow-none focus-visible:ring-0 focus-visible:ring-offset-0"
           placeholder="Add tags separated by commas"
         />
