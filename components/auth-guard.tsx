@@ -8,35 +8,19 @@ import { useCurrentUser } from "@/hooks/use-auth";
 
 export function AuthGuard({ children }: { children: React.ReactNode }) {
   const router = useRouter();
-  const { refreshToken, isLoading, hydrateFromStorage } = useAuthStore();
-  const { isLoading: isUserLoading, isError } = useCurrentUser();
+  const refreshToken = useAuthStore((s) => s.refreshToken);
+  const { isLoading, isError } = useCurrentUser();
 
   useEffect(() => {
-    hydrateFromStorage();
-  }, [hydrateFromStorage]);
-
-  useEffect(() => {
-    if (!isLoading && !refreshToken) {
-      router.push("/login");
-    }
-  }, [isLoading, refreshToken, router]);
-
-  useEffect(() => {
-    if (isError) {
+    if (!refreshToken || isError) {
       useAuthStore.getState().clearAuth();
       router.push("/login");
     }
-  }, [isError, router]);
+  }, [refreshToken, isError, router]);
 
-  if (isLoading || (!refreshToken && !isError)) {
-    return (
-      <div className="flex min-h-screen items-center justify-center">
-        <div className="size-8 animate-spin rounded-full border-4 border-muted border-t-primary" />
-      </div>
-    );
-  }
+  if (!refreshToken) return null;
 
-  if (isUserLoading) {
+  if (isLoading) {
     return (
       <div className="flex min-h-screen items-center justify-center">
         <div className="size-8 animate-spin rounded-full border-4 border-muted border-t-primary" />
