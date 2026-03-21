@@ -4,6 +4,7 @@ import { Inter, Noto_Serif, Source_Code_Pro } from "next/font/google";
 import { Toaster } from "sonner";
 
 import { FontThemeProvider } from "@/components/font-theme-provider";
+import { QueryProvider } from "@/components/query-provider";
 import { ThemeProvider } from "@/components/theme-provider";
 import "./globals.css";
 
@@ -43,16 +44,18 @@ export default function RootLayout({
       <body
         className="bg-background text-foreground antialiased"
       >
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
-          <FontThemeProvider />
-          {children}
-          <Toaster position="bottom-center" />
-        </ThemeProvider>
+        <QueryProvider>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
+            <FontThemeProvider />
+            {children}
+            <Toaster position="bottom-center" />
+          </ThemeProvider>
+        </QueryProvider>
       </body>
     </html>
   );

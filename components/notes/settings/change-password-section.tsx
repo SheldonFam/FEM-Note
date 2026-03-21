@@ -4,6 +4,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { PasswordInput } from "@/components/auth/password-input";
 import { showToast } from "@/components/notes/toast-notification";
 import { Button } from "@/components/ui/button";
+import { useChangePassword } from "@/hooks/use-auth";
+import { ApiError } from "@/lib/api/errors";
 import {
   changePasswordSchema,
   type ChangePasswordFormData,
@@ -15,15 +17,32 @@ export function ChangePasswordSection() {
     handleSubmit,
     formState: { errors },
     reset,
+    setError,
   } = useForm<ChangePasswordFormData>({
     resolver: zodResolver(changePasswordSchema),
   });
 
-  function onSubmit(data: ChangePasswordFormData) {
-    // TODO: implement password change
-    console.log(data);
-    showToast("Password changed successfully!");
-    reset();
+  const changePassword = useChangePassword();
+
+  async function onSubmit(data: ChangePasswordFormData) {
+    try {
+      await changePassword.mutateAsync({
+        currentPassword: data.oldPassword,
+        newPassword: data.newPassword,
+      });
+      showToast("Password changed successfully!");
+      reset();
+    } catch (err) {
+      if (err instanceof ApiError) {
+        if (err.statusCode === 400) {
+          setError("oldPassword", { message: err.message });
+        } else {
+          showToast(err.message);
+        }
+      } else {
+        showToast("Failed to change password.");
+      }
+    }
   }
 
   return (
@@ -84,7 +103,9 @@ export function ChangePasswordSection() {
         </div>
 
         <div className="flex justify-end pt-2">
-          <Button type="submit">Save Password</Button>
+          <Button type="submit" disabled={changePassword.isPending}>
+            {changePassword.isPending ? "Saving..." : "Save Password"}
+          </Button>
         </div>
       </form>
     </div>

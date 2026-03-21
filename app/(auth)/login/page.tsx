@@ -9,6 +9,8 @@ import { GoogleButton } from "@/components/auth/google-button";
 import { PasswordInput } from "@/components/auth/password-input";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { useLogin } from "@/hooks/use-auth";
+import { ApiError } from "@/lib/api/errors";
 import { loginSchema, type LoginFormData } from "@/lib/auth-schemas";
 
 export default function LoginPage() {
@@ -16,18 +18,34 @@ export default function LoginPage() {
     register,
     handleSubmit,
     formState: { errors },
+    setError,
   } = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
   });
 
-  function onSubmit(data: LoginFormData) {
-    // TODO: implement auth
-    console.log(data);
+  const login = useLogin();
+
+  async function onSubmit(data: LoginFormData) {
+    try {
+      await login.mutateAsync(data);
+    } catch (err) {
+      if (err instanceof ApiError) {
+        setError("root", { message: err.message });
+      } else {
+        setError("root", { message: "Something went wrong. Please try again." });
+      }
+    }
   }
 
   return (
     <AuthCard title="Welcome to Note" description="Please log in to continue">
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+        {errors.root ? (
+          <p className="rounded-lg bg-destructive/10 px-3 py-2 text-sm text-destructive">
+            {errors.root.message}
+          </p>
+        ) : null}
+
         <div>
           <label htmlFor="email" className="mb-1.5 block text-sm font-medium">
             Email Address
@@ -65,8 +83,8 @@ export default function LoginPage() {
           ) : null}
         </div>
 
-        <Button type="submit" className="w-full">
-          Login
+        <Button type="submit" className="w-full" disabled={login.isPending}>
+          {login.isPending ? "Logging in..." : "Login"}
         </Button>
       </form>
 
