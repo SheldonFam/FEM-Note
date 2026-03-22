@@ -5,6 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
 
 import { AuthCard } from "@/components/auth/auth-card";
+import { FormError } from "@/components/auth/form-error";
 import { GoogleButton } from "@/components/auth/google-button";
 import { PasswordInput } from "@/components/auth/password-input";
 import { Button } from "@/components/ui/button";
@@ -21,6 +22,7 @@ export default function SignupPage() {
     setError,
   } = useForm<SignupFormData>({
     resolver: zodResolver(signupSchema),
+    mode: "onBlur",
   });
 
   const signup = useSignup();
@@ -36,7 +38,9 @@ export default function SignupPage() {
           setError("root", { message: err.message });
         }
       } else {
-        setError("root", { message: "Something went wrong. Please try again." });
+        setError("root", {
+          message: "Something went wrong. Please try again.",
+        });
       }
     }
   }
@@ -54,23 +58,17 @@ export default function SignupPage() {
         ) : null}
 
         <div>
-          <label
-            htmlFor="email"
-            className="mb-1.5 block text-sm font-medium"
-          >
+          <label htmlFor="email" className="mb-1.5 block text-sm font-medium">
             Email Address
           </label>
           <Input
             id="email"
             type="email"
             placeholder="email@example.com"
+            aria-invalid={!!errors.email}
             {...register("email")}
           />
-          {errors.email ? (
-            <p className="mt-1.5 text-xs text-destructive">
-              {errors.email.message}
-            </p>
-          ) : null}
+          <FormError message={errors.email?.message} />
         </div>
 
         <div>
@@ -83,13 +81,10 @@ export default function SignupPage() {
           <PasswordInput
             id="password"
             hint="At least 8 characters"
+            aria-invalid={!!errors.password}
             {...register("password")}
           />
-          {errors.password ? (
-            <p className="mt-1.5 text-xs text-destructive">
-              {errors.password.message}
-            </p>
-          ) : null}
+          <FormError message={errors.password?.message} />
         </div>
 
         <Button type="submit" className="w-full" disabled={signup.isPending}>

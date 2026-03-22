@@ -5,6 +5,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { AuthCard } from "@/components/auth/auth-card";
+import { FormError } from "@/components/auth/form-error";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useForgotPassword } from "@/hooks/use-auth";
@@ -21,6 +22,7 @@ export default function ForgotPasswordPage() {
     formState: { errors },
   } = useForm<ForgotPasswordFormData>({
     resolver: zodResolver(forgotPasswordSchema),
+    mode: "onBlur",
   });
 
   const forgotPassword = useForgotPassword();
@@ -50,26 +52,24 @@ export default function ForgotPasswordPage() {
     >
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
         <div>
-          <label
-            htmlFor="email"
-            className="mb-1.5 block text-sm font-medium"
-          >
+          <label htmlFor="email" className="mb-1.5 block text-sm font-medium">
             Email Address
           </label>
           <Input
             id="email"
             type="email"
             placeholder="email@example.com"
+            aria-invalid={!!errors.email}
             {...register("email")}
           />
-          {errors.email ? (
-            <p className="mt-1.5 text-xs text-destructive">
-              {errors.email.message}
-            </p>
-          ) : null}
+          <FormError message={errors.email?.message} />
         </div>
 
-        <Button type="submit" className="w-full" disabled={forgotPassword.isPending}>
+        <Button
+          type="submit"
+          className="w-full"
+          disabled={forgotPassword.isPending}
+        >
           {forgotPassword.isPending ? "Sending..." : "Send Reset Link"}
         </Button>
       </form>
