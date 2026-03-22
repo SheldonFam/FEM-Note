@@ -21,6 +21,10 @@ interface MeResponse {
   isEmailVerified: boolean;
 }
 
+export function apiGoogleLogin(accessToken: string) {
+  return post<AuthResponse>("/auth/google", { accessToken });
+}
+
 export function apiLogin(email: string, password: string) {
   return post<AuthResponse>("/auth/login", { email, password });
 }

@@ -1,10 +1,31 @@
+"use client";
+
 import Image from "next/image";
+import { useGoogleLogin } from "@react-oauth/google";
+
+import { useGoogleAuth } from "@/hooks/use-auth";
+import { showToast } from "@/components/notes/toast-notification";
+import { Button } from "@/components/ui/button";
 
 export function GoogleButton() {
+  const googleAuth = useGoogleAuth();
+
+  const login = useGoogleLogin({
+    onSuccess: (response) => {
+      googleAuth.mutate(response.access_token);
+    },
+    onError: () => {
+      showToast("Google sign-in failed. Please try again.");
+    },
+  });
+
   return (
-    <button
+    <Button
       type="button"
-      className="flex h-11 w-full items-center justify-center gap-3 rounded-xl border border-border bg-card text-sm font-medium transition-colors hover:bg-accent"
+      variant="outline"
+      onClick={() => login()}
+      disabled={googleAuth.isPending}
+      className="w-full gap-3"
     >
       <Image
         src="/assets/images/icon-google.svg"
@@ -13,7 +34,7 @@ export function GoogleButton() {
         height={20}
         className="size-5"
       />
-      Google
-    </button>
+      {googleAuth.isPending ? "Signing in..." : "Google"}
+    </Button>
   );
 }
