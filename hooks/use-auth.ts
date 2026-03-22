@@ -6,6 +6,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   apiLogin,
   apiSignup,
+  apiGoogleLogin,
   apiLogout,
   apiGetMe,
   apiChangePassword,
@@ -36,6 +37,20 @@ export function useSignup() {
   return useMutation({
     mutationFn: ({ email, password }: { email: string; password: string }) =>
       apiSignup(email, password),
+    onSuccess: (data) => {
+      setTokens(data.accessToken, data.refreshToken);
+      setUser(data.user);
+      router.push("/");
+    },
+  });
+}
+
+export function useGoogleAuth() {
+  const router = useRouter();
+  const { setTokens, setUser } = useAuthStore();
+
+  return useMutation({
+    mutationFn: (idToken: string) => apiGoogleLogin(idToken),
     onSuccess: (data) => {
       setTokens(data.accessToken, data.refreshToken);
       setUser(data.user);

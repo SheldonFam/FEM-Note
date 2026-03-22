@@ -8,6 +8,7 @@ import Link from "next/link";
 
 import { FullPageSpinner } from "@/components/ui/spinner";
 import { AuthCard } from "@/components/auth/auth-card";
+import { FormError } from "@/components/auth/form-error";
 import { PasswordInput } from "@/components/auth/password-input";
 import { Button } from "@/components/ui/button";
 import { useResetPassword } from "@/hooks/use-auth";
@@ -29,6 +30,7 @@ function ResetPasswordForm() {
     setError,
   } = useForm<ResetPasswordFormData>({
     resolver: zodResolver(resetPasswordSchema),
+    mode: "onBlur",
   });
 
   const resetPassword = useResetPassword();
@@ -44,7 +46,9 @@ function ResetPasswordForm() {
       if (err instanceof ApiError) {
         setError("root", { message: err.message });
       } else {
-        setError("root", { message: "Something went wrong. Please try again." });
+        setError("root", {
+          message: "Something went wrong. Please try again.",
+        });
       }
     }
   }
@@ -84,13 +88,10 @@ function ResetPasswordForm() {
           <PasswordInput
             id="new-password"
             hint="At least 8 characters"
+            aria-invalid={!!errors.password}
             {...register("password")}
           />
-          {errors.password ? (
-            <p className="mt-1.5 text-xs text-destructive">
-              {errors.password.message}
-            </p>
-          ) : null}
+          <FormError message={errors.password?.message} />
         </div>
 
         <div>
@@ -102,16 +103,17 @@ function ResetPasswordForm() {
           </label>
           <PasswordInput
             id="confirm-password"
+            aria-invalid={!!errors.confirmPassword}
             {...register("confirmPassword")}
           />
-          {errors.confirmPassword ? (
-            <p className="mt-1.5 text-xs text-destructive">
-              {errors.confirmPassword.message}
-            </p>
-          ) : null}
+          <FormError message={errors.confirmPassword?.message} />
         </div>
 
-        <Button type="submit" className="w-full" disabled={resetPassword.isPending}>
+        <Button
+          type="submit"
+          className="w-full"
+          disabled={resetPassword.isPending}
+        >
           {resetPassword.isPending ? "Resetting..." : "Reset Password"}
         </Button>
       </form>

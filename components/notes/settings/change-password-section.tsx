@@ -1,6 +1,7 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
+import { FormError } from "@/components/auth/form-error";
 import { PasswordInput } from "@/components/auth/password-input";
 import { showToast } from "@/components/notes/toast-notification";
 import { Button } from "@/components/ui/button";
@@ -20,6 +21,7 @@ export function ChangePasswordSection() {
     setError,
   } = useForm<ChangePasswordFormData>({
     resolver: zodResolver(changePasswordSchema),
+    mode: "onBlur",
   });
 
   const changePassword = useChangePassword();
@@ -57,12 +59,12 @@ export function ChangePasswordSection() {
           >
             Old Password
           </label>
-          <PasswordInput id="oldPassword" {...register("oldPassword")} />
-          {errors.oldPassword ? (
-            <p className="mt-1.5 text-xs text-destructive">
-              {errors.oldPassword.message}
-            </p>
-          ) : null}
+          <PasswordInput
+            id="oldPassword"
+            aria-invalid={!!errors.oldPassword}
+            {...register("oldPassword")}
+          />
+          <FormError message={errors.oldPassword?.message} />
         </div>
 
         <div>
@@ -75,13 +77,10 @@ export function ChangePasswordSection() {
           <PasswordInput
             id="newPassword"
             hint="At least 8 characters"
+            aria-invalid={!!errors.newPassword}
             {...register("newPassword")}
           />
-          {errors.newPassword ? (
-            <p className="mt-1.5 text-xs text-destructive">
-              {errors.newPassword.message}
-            </p>
-          ) : null}
+          <FormError message={errors.newPassword?.message} />
         </div>
 
         <div>
@@ -93,13 +92,10 @@ export function ChangePasswordSection() {
           </label>
           <PasswordInput
             id="confirmNewPassword"
+            aria-invalid={!!errors.confirmNewPassword}
             {...register("confirmNewPassword")}
           />
-          {errors.confirmNewPassword ? (
-            <p className="mt-1.5 text-xs text-destructive">
-              {errors.confirmNewPassword.message}
-            </p>
-          ) : null}
+          <FormError message={errors.confirmNewPassword?.message} />
         </div>
 
         <div className="flex justify-end pt-2">
