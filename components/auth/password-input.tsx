@@ -3,6 +3,7 @@
 import { forwardRef, useState } from "react";
 import Image from "next/image";
 
+import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 
@@ -24,8 +25,10 @@ export const PasswordInput = forwardRef<HTMLInputElement, PasswordInputProps>(
             className={cn("pr-10", className)}
             {...props}
           />
-          <button
+          <Button
             type="button"
+            variant="unstyled"
+            size="none"
             onClick={() => setVisible((v) => !v)}
             className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground transition-colors hover:text-foreground"
             aria-label={visible ? "Hide password" : "Show password"}
@@ -41,7 +44,7 @@ export const PasswordInput = forwardRef<HTMLInputElement, PasswordInputProps>(
               height={20}
               className="size-5"
             />
-          </button>
+          </Button>
         </div>
         {hint ? (
           <p className="mt-2 flex items-center gap-1.5 text-xs text-muted-foreground">

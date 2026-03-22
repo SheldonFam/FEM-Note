@@ -45,8 +45,14 @@ export function apiGetMe() {
   return get<MeResponse>("/auth/me");
 }
 
-export function apiChangePassword(currentPassword: string, newPassword: string) {
-  return post<TokenPair>("/auth/change-password", { currentPassword, newPassword });
+export function apiChangePassword(
+  currentPassword: string,
+  newPassword: string,
+) {
+  return post<TokenPair>("/auth/change-password", {
+    currentPassword,
+    newPassword,
+  });
 }
 
 export function apiForgotPassword(email: string) {
@@ -54,5 +60,8 @@ export function apiForgotPassword(email: string) {
 }
 
 export function apiResetPassword(token: string, newPassword: string) {
-  return post<{ message: string }>("/auth/reset-password", { token, newPassword });
+  return post<{ message: string }>("/auth/reset-password", {
+    token,
+    newPassword,
+  });
 }
