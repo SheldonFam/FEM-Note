@@ -62,15 +62,15 @@ export function useGoogleAuth() {
 export function useLogout() {
   const router = useRouter();
   const queryClient = useQueryClient();
-  const { refreshToken, clearAuth } = useAuthStore();
 
   return useMutation({
     mutationFn: () => {
-      if (refreshToken) return apiLogout(refreshToken);
+      const token = useAuthStore.getState().refreshToken;
+      if (token) return apiLogout(token);
       return Promise.resolve();
     },
     onSettled: () => {
-      clearAuth();
+      useAuthStore.getState().clearAuth();
       queryClient.clear();
       router.push("/login");
     },

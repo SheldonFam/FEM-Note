@@ -30,7 +30,7 @@ export function NoteEditor({
         aria-label="Note title"
         value={draft.title}
         onChange={(event) => onTitleChange(event.target.value)}
-        className="mb-1 h-auto border-none bg-transparent px-0 text-2xl font-bold tracking-tight shadow-none focus-visible:ring-0 focus-visible:ring-offset-0 placeholder:font-bold placeholder:text-2xl placeholder:text-[#0E121B]"
+        className="mb-1 h-auto border-none bg-transparent px-0 text-2xl font-bold tracking-tight shadow-none focus-visible:ring-0 focus-visible:ring-offset-0 placeholder:font-bold placeholder:text-2xl placeholder:text-foreground"
         placeholder="Enter a title..."
       />
       <div className="mb-4" />

@@ -42,7 +42,8 @@ export function DesktopLayout({
   const setArchiveDialogOpen = useNotesUI((s) => s.setArchiveDialogOpen);
   const setDeleteDialogOpen = useNotesUI((s) => s.setDeleteDialogOpen);
 
-  const handleCreate = view === "all" ? handlers.handleCreateNote : () => router.push("/");
+  const handleCreate =
+    view === "all" ? handlers.handleCreateNote : () => router.push("/");
 
   return (
     <div className="hidden min-h-screen md:grid md:grid-cols-[260px_minmax(0,1fr)]">
@@ -61,6 +62,7 @@ export function DesktopLayout({
             <div className="relative w-full max-w-sm flex-1 lg:w-80">
               <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
               <Input
+                id="notes-search"
                 aria-label="Search notes"
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}

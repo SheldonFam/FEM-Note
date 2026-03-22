@@ -19,7 +19,7 @@ export function AuthGuard({ children }: { children: React.ReactNode }) {
     }
   }, [refreshToken, isError, router]);
 
-  if (!refreshToken) return null;
+  if (!refreshToken || isError) return null;
 
   if (isLoading) {
     return <FullPageSpinner />;
