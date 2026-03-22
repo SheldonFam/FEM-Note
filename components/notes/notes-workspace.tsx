@@ -3,6 +3,7 @@
 import { useEffect, useRef } from "react";
 
 import { AuthGuard } from "@/components/auth-guard";
+import { FullPageSpinner } from "@/components/ui/spinner";
 import { DesktopLayout } from "@/components/notes/desktop-layout";
 import { MobileLayout } from "@/components/notes/mobile-layout";
 import { NotesDialogs } from "@/components/notes/notes-dialogs";
@@ -43,14 +44,16 @@ export function NotesWorkspace({
     limit: 100,
   };
 
-  const { data: notesData, isLoading: notesLoading, isFetching } = useNotes(notesParams);
+  const { data: notesData, isLoading: notesLoading } = useNotes(notesParams);
   const { data: tagsData } = useTags();
 
   const notes = notesData?.notes ?? [];
   const allTags = (tagsData ?? []).map((t) => t.name);
 
-  const { isSearching, visibleNotes, selectedNote, heading } =
-    useDerivedNotes(notes, view);
+  const { isSearching, visibleNotes, selectedNote, heading } = useDerivedNotes(
+    notes,
+    view,
+  );
 
   const editor = useEditorContent(selectedNote);
   const handlers = useNotesHandlers(selectedNote);
@@ -68,9 +71,7 @@ export function NotesWorkspace({
     <AuthGuard>
       <div className="min-h-screen bg-background text-foreground">
         {notesLoading ? (
-          <div className="flex min-h-screen items-center justify-center">
-            <div className="size-8 animate-spin rounded-full border-4 border-muted border-t-primary" />
-          </div>
+          <FullPageSpinner />
         ) : (
           <>
             <DesktopLayout
@@ -79,7 +80,11 @@ export function NotesWorkspace({
               allTags={allTags}
               {...sharedProps}
             />
-            <MobileLayout view={view} autoFocusSearch={autoFocusSearch} {...sharedProps} />
+            <MobileLayout
+              view={view}
+              autoFocusSearch={autoFocusSearch}
+              {...sharedProps}
+            />
             <NotesDialogs handlers={handlers} />
           </>
         )}
