@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { Tag } from "lucide-react";
 
 import { AuthGuard } from "@/components/auth-guard";
+import { Spinner } from "@/components/ui/spinner";
 import { CreateNoteFab } from "@/components/notes/create-note-fab";
 import { MobileBottomNav } from "@/components/notes/mobile-bottom-nav";
 import { useTags } from "@/hooks/use-notes-queries";
@@ -35,7 +36,7 @@ export function TagsListView() {
 
           {isLoading ? (
             <div className="mt-4 flex justify-center">
-              <div className="size-6 animate-spin rounded-full border-4 border-muted border-t-primary" />
+              <Spinner />
             </div>
           ) : (
             <ul className="mt-4">

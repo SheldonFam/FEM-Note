@@ -6,6 +6,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
 
+import { FullPageSpinner } from "@/components/ui/spinner";
 import { AuthCard } from "@/components/auth/auth-card";
 import { PasswordInput } from "@/components/auth/password-input";
 import { Button } from "@/components/ui/button";
@@ -120,13 +121,7 @@ function ResetPasswordForm() {
 
 export default function ResetPasswordPage() {
   return (
-    <Suspense
-      fallback={
-        <div className="flex min-h-screen items-center justify-center">
-          <div className="size-8 animate-spin rounded-full border-4 border-muted border-t-primary" />
-        </div>
-      }
-    >
+    <Suspense fallback={<FullPageSpinner />}>
       <ResetPasswordForm />
     </Suspense>
   );

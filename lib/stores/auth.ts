@@ -10,23 +10,25 @@ interface AuthState {
   accessToken: string | null;
   refreshToken: string | null;
   user: AuthUser | null;
-  isLoading: boolean;
 }
 
 interface AuthActions {
   setTokens: (accessToken: string, refreshToken: string) => void;
   setUser: (user: AuthUser) => void;
   clearAuth: () => void;
-  hydrateFromStorage: () => void;
 }
 
 export type AuthStore = AuthState & AuthActions;
 
+function getInitialRefreshToken() {
+  if (typeof window === "undefined") return null;
+  return localStorage.getItem("refreshToken");
+}
+
 export const useAuthStore = create<AuthStore>((set) => ({
   accessToken: null,
-  refreshToken: null,
+  refreshToken: getInitialRefreshToken(),
   user: null,
-  isLoading: true,
 
   setTokens: (accessToken, refreshToken) => {
     if (typeof window !== "undefined") {
@@ -44,12 +46,4 @@ export const useAuthStore = create<AuthStore>((set) => ({
     set({ accessToken: null, refreshToken: null, user: null });
   },
 
-  hydrateFromStorage: () => {
-    if (typeof window === "undefined") {
-      set({ isLoading: false });
-      return;
-    }
-    const refreshToken = localStorage.getItem("refreshToken");
-    set({ refreshToken, isLoading: false });
-  },
 }));
