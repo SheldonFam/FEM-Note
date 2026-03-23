@@ -50,7 +50,7 @@ export function useGoogleAuth() {
   const { setTokens, setUser } = useAuthStore();
 
   return useMutation({
-    mutationFn: (idToken: string) => apiGoogleLogin(idToken),
+    mutationFn: (accessToken: string) => apiGoogleLogin(accessToken),
     onSuccess: (data) => {
       setTokens(data.accessToken, data.refreshToken);
       setUser(data.user);
