@@ -1,3 +1,4 @@
+import { useCallback, useRef } from "react";
 import { Plus } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -51,6 +52,87 @@ export function NoteList({
   onSelectNote,
   onCreateNote,
 }: NoteListProps) {
+  const listRef = useRef<HTMLDivElement>(null);
+
+  const handleKeyDown = useCallback(
+    (e: React.KeyboardEvent, noteId: string) => {
+      const currentIndex = notes.findIndex((n) => n.id === noteId);
+      if (currentIndex === -1) return;
+
+      let nextIndex: number | null = null;
+
+      if (e.key === "ArrowDown") {
+        e.preventDefault();
+        nextIndex = Math.min(currentIndex + 1, notes.length - 1);
+      } else if (e.key === "ArrowUp") {
+        e.preventDefault();
+        nextIndex = Math.max(currentIndex - 1, 0);
+      }
+
+      if (nextIndex !== null && nextIndex !== currentIndex) {
+        onSelectNote(notes[nextIndex].id);
+        const buttons =
+          listRef.current?.querySelectorAll<HTMLButtonElement>(
+            "[data-note-item]",
+          );
+        buttons?.[nextIndex]?.focus();
+      }
+    },
+    [notes, onSelectNote],
+  );
+
+  const selectedIndex = notes.findIndex((n) => n.id === selectedNoteId);
+
+  const renderNoteButton = (
+    note: Note,
+    index: number,
+    className: string,
+    isActive?: boolean,
+  ) => (
+    <Button
+      key={note.id}
+      type="button"
+      variant="unstyled"
+      size="none"
+      role="option"
+      data-note-item
+      aria-selected={isActive || false}
+      tabIndex={
+        selectedIndex === -1
+          ? index === 0
+            ? 0
+            : -1
+          : index === selectedIndex
+            ? 0
+            : -1
+      }
+      onClick={() => onSelectNote(note.id)}
+      onKeyDown={(e) => handleKeyDown(e, note.id)}
+      className={className}
+    >
+      <NoteListItem note={note} />
+    </Button>
+  );
+
+  const emptyMessage =
+    view === "all" ? (
+      "You don\u2019t have any notes yet. Start a new note to capture your thoughts and ideas."
+    ) : (
+      <>
+        No notes have been archived yet. Move notes here for safekeeping, or{" "}
+        <Button
+          type="button"
+          variant="unstyled"
+          size="none"
+          onClick={onCreateNote}
+          className="font-medium text-foreground underline underline-offset-2"
+        >
+          create a new note
+        </Button>
+        .
+      </>
+    );
+
   return (
     <aside className="md:border-r md:border-b-0 md:px-6 md:py-5 lg:px-6">
       <Button
@@ -76,34 +158,29 @@ export function NoteList({
       ) : null}
 
       {/* Desktop: list with dividers */}
-      <div className="hidden divide-y divide-border md:block">
+      <div
+        ref={listRef}
+        role="listbox"
+        aria-label="Notes"
+        className="hidden divide-y divide-border md:block"
+      >
         {notes.length ? (
-          notes.map((note) => {
+          notes.map((note, index) => {
             const isActive = note.id === selectedNoteId;
-
-            return (
-              <Button
-                key={note.id}
-                type="button"
-                variant="unstyled"
-                size="none"
-                aria-current={isActive || undefined}
-                onClick={() => onSelectNote(note.id)}
-                className={cn(
-                  "w-full rounded-lg px-4 py-3 text-left transition-colors",
-                  isActive ? "bg-accent" : "hover:bg-card",
-                )}
-              >
-                <NoteListItem note={note} />
-              </Button>
+            return renderNoteButton(
+              note,
+              index,
+              cn(
+                "w-full rounded-lg px-4 py-3 text-left transition-colors",
+                isActive ? "bg-accent" : "hover:bg-card",
+              ),
+              isActive,
             );
           })
         ) : (
           <div className="rounded-2xl border border-dashed border-[#E0E4EA] bg-[#F3F5F8] px-4 py-5">
             <p className="text-sm leading-6 text-muted-foreground">
-              {view === "all"
-                ? "You don\u2019t have any notes yet. Start a new note to capture your thoughts and ideas."
-                : <>No notes have been archived yet. Move notes here for safekeeping, or{" "}<Button type="button" variant="unstyled" size="none" onClick={onCreateNote} className="font-medium text-foreground underline underline-offset-2">create a new note</Button>.</>}
+              {emptyMessage}
             </p>
           </div>
         )}
@@ -112,24 +189,17 @@ export function NoteList({
       {/* Mobile: flat list with separator lines */}
       <div className="divide-y divide-border md:hidden">
         {notes.length ? (
-          notes.map((note) => (
-            <Button
-              key={note.id}
-              type="button"
-              variant="unstyled"
-              size="none"
-              onClick={() => onSelectNote(note.id)}
-              className="w-full py-4 text-left transition-colors first:pt-0"
-            >
-              <NoteListItem note={note} />
-            </Button>
-          ))
+          notes.map((note, index) =>
+            renderNoteButton(
+              note,
+              index,
+              "w-full py-4 text-left transition-colors first:pt-0",
+            ),
+          )
         ) : (
           <div className="py-5">
             <p className="text-sm leading-6 text-muted-foreground">
-              {view === "all"
-                ? "You don\u2019t have any notes yet. Start a new note to capture your thoughts and ideas."
-                : <>No notes have been archived yet. Move notes here for safekeeping, or{" "}<Button type="button" variant="unstyled" size="none" onClick={onCreateNote} className="font-medium text-foreground underline underline-offset-2">create a new note</Button>.</>}
+              {emptyMessage}
             </p>
           </div>
         )}

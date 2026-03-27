@@ -27,10 +27,7 @@ async function refreshTokens(): Promise<void> {
   setTokens(data.accessToken, data.refreshToken);
 }
 
-async function request<T>(
-  path: string,
-  options: RequestInit = {},
-): Promise<T> {
+async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
   const { accessToken, refreshToken } = useAuthStore.getState();
 
   const headers: Record<string, string> = {
@@ -88,7 +85,7 @@ async function request<T>(
   }
 
   if (res.status === 204 || res.headers.get("content-length") === "0") {
-    return undefined as T;
+    return undefined as unknown as T;
   }
 
   return res.json();

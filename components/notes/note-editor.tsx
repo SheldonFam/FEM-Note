@@ -2,7 +2,7 @@ import { Archive, Clock3, Tag } from "lucide-react";
 
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
-import { Textarea } from "@/components/ui/textarea";
+import { TipTapEditor } from "@/components/editor/tiptap-editor";
 import { formatNoteDate } from "@/lib/notes";
 import type { NoteDraft } from "@/lib/stores/notes-ui";
 import type { Note } from "@/types/note";
@@ -30,7 +30,7 @@ export function NoteEditor({
         aria-label="Note title"
         value={draft.title}
         onChange={(event) => onTitleChange(event.target.value)}
-        className="mb-1 h-auto border-none bg-transparent px-0 text-2xl font-bold tracking-tight shadow-none focus-visible:ring-0 focus-visible:ring-offset-0 placeholder:font-bold placeholder:text-2xl placeholder:text-[#0E121B]"
+        className="mb-1 h-auto border-none bg-transparent px-0 text-2xl font-bold tracking-tight shadow-none focus-visible:ring-0 focus-visible:ring-offset-0 placeholder:font-bold placeholder:text-2xl placeholder:text-foreground"
         placeholder="Enter a title..."
       />
       <div className="mb-4" />
@@ -70,12 +70,11 @@ export function NoteEditor({
 
       <Separator className="my-5" />
 
-      <Textarea
-        aria-label="Note content"
-        value={draft.content}
-        onChange={(event) => onContentChange(event.target.value)}
-        placeholder="Start typing your note here..."
-        className="min-h-[360px] flex-1 resize-none border-none bg-transparent px-0 py-0 text-base leading-7 shadow-none focus-visible:ring-0 focus-visible:ring-offset-0"
+      <TipTapEditor
+        content={draft.content}
+        noteId={note.id}
+        onChange={onContentChange}
+        className="min-h-[360px] flex-1"
       />
     </div>
   );

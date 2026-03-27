@@ -50,7 +50,7 @@ export function useGoogleAuth() {
   const { setTokens, setUser } = useAuthStore();
 
   return useMutation({
-    mutationFn: (idToken: string) => apiGoogleLogin(idToken),
+    mutationFn: (accessToken: string) => apiGoogleLogin(accessToken),
     onSuccess: (data) => {
       setTokens(data.accessToken, data.refreshToken);
       setUser(data.user);
@@ -62,15 +62,15 @@ export function useGoogleAuth() {
 export function useLogout() {
   const router = useRouter();
   const queryClient = useQueryClient();
-  const { refreshToken, clearAuth } = useAuthStore();
 
   return useMutation({
     mutationFn: () => {
-      if (refreshToken) return apiLogout(refreshToken);
+      const token = useAuthStore.getState().refreshToken;
+      if (token) return apiLogout(token);
       return Promise.resolve();
     },
     onSettled: () => {
-      clearAuth();
+      useAuthStore.getState().clearAuth();
       queryClient.clear();
       router.push("/login");
     },

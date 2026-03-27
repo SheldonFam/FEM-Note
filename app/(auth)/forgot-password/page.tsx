@@ -28,8 +28,12 @@ export default function ForgotPasswordPage() {
   const forgotPassword = useForgotPassword();
 
   async function onSubmit(data: ForgotPasswordFormData) {
-    await forgotPassword.mutateAsync(data);
-    setSubmitted(true);
+    try {
+      await forgotPassword.mutateAsync(data);
+      setSubmitted(true);
+    } catch {
+      // Error is available via forgotPassword.error
+    }
   }
 
   if (submitted) {
@@ -64,6 +68,16 @@ export default function ForgotPasswordPage() {
           />
           <FormError message={errors.email?.message} />
         </div>
+
+        {forgotPassword.isError && (
+          <FormError
+            message={
+              forgotPassword.error instanceof Error
+                ? forgotPassword.error.message
+                : "Something went wrong. Please try again."
+            }
+          />
+        )}
 
         <Button
           type="submit"

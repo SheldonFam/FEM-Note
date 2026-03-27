@@ -16,16 +16,21 @@ export function NoteActions({
   onRestore,
   onDelete,
 }: NoteActionsProps) {
+  const isNewNote = note && !note.title && !note.content;
+
+  if (!note || isNewNote) {
+    return <aside className="hidden px-6 py-5 lg:px-6 xl:block" />;
+  }
+
   return (
     <aside className="hidden px-6 py-5 lg:px-6 xl:block">
       <div className="space-y-3">
-        {note?.isArchived ? (
+        {note.isArchived ? (
           <Button
             type="button"
             variant="outline"
             className="w-full justify-start"
             onClick={onRestore}
-            disabled={!note}
           >
             <Undo2 className="size-4" />
             Restore Note
@@ -36,7 +41,6 @@ export function NoteActions({
             variant="outline"
             className="w-full justify-start"
             onClick={onArchive}
-            disabled={!note}
           >
             <Archive className="size-4" />
             Archive Note
@@ -48,7 +52,6 @@ export function NoteActions({
           variant="outline"
           className="w-full justify-start"
           onClick={onDelete}
-          disabled={!note}
         >
           <Trash2 className="size-4" />
           Delete Note

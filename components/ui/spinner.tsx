@@ -16,6 +16,8 @@ const sizeClasses = {
 export function Spinner({ className, size = "md" }: SpinnerProps) {
   return (
     <Loader2
+      role="status"
+      aria-label="Loading"
       className={cn("animate-spin text-primary", sizeClasses[size], className)}
     />
   );
@@ -24,7 +26,7 @@ export function Spinner({ className, size = "md" }: SpinnerProps) {
 export function FullPageSpinner() {
   return (
     <div className="flex min-h-screen items-center justify-center">
-      <Spinner size="lg" />
+      <Spinner size="lg" aria-label="Loading page" />
     </div>
   );
 }

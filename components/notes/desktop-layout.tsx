@@ -42,7 +42,9 @@ export function DesktopLayout({
   const setArchiveDialogOpen = useNotesUI((s) => s.setArchiveDialogOpen);
   const setDeleteDialogOpen = useNotesUI((s) => s.setDeleteDialogOpen);
 
-  const handleCreate = view === "all" ? handlers.handleCreateNote : () => router.push("/");
+  const handleCreate =
+    view === "all" ? handlers.handleCreateNote : () => router.push("/");
+  const showActions = selectedNote && (selectedNote.title || selectedNote.content);
 
   return (
     <div className="hidden min-h-screen md:grid md:grid-cols-[260px_minmax(0,1fr)]">
@@ -61,6 +63,7 @@ export function DesktopLayout({
             <div className="relative w-full max-w-sm flex-1 lg:w-80">
               <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
               <Input
+                id="notes-search"
                 aria-label="Search notes"
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
@@ -80,7 +83,7 @@ export function DesktopLayout({
           </div>
         </header>
 
-        <div className="grid flex-1 md:grid-cols-[minmax(280px,320px)_minmax(0,1fr)] xl:grid-cols-[minmax(280px,320px)_minmax(0,1fr)_220px]">
+        <div className={`grid flex-1 md:grid-cols-[minmax(280px,320px)_minmax(0,1fr)] ${showActions ? "xl:grid-cols-[minmax(280px,320px)_minmax(0,1fr)_220px]" : ""}`}>
           <NoteList
             notes={visibleNotes}
             selectedNoteId={selectedNote?.id ?? null}
@@ -91,7 +94,7 @@ export function DesktopLayout({
             onCreateNote={handleCreate}
           />
 
-          <section className="px-6 py-5 xl:border-r xl:border-border lg:px-8">
+          <section className={`px-6 py-5 lg:px-8 ${showActions ? "xl:border-r xl:border-border" : ""}`}>
             {selectedNote ? (
               <NoteEditor
                 note={selectedNote}
@@ -106,12 +109,14 @@ export function DesktopLayout({
             )}
           </section>
 
-          <NoteActions
-            note={selectedNote}
-            onArchive={() => setArchiveDialogOpen(true)}
-            onRestore={() => handlers.handleArchiveToggle(false)}
-            onDelete={() => setDeleteDialogOpen(true)}
-          />
+          {showActions && (
+            <NoteActions
+              note={selectedNote}
+              onArchive={() => setArchiveDialogOpen(true)}
+              onRestore={() => handlers.handleArchiveToggle(false)}
+              onDelete={() => setDeleteDialogOpen(true)}
+            />
+          )}
         </div>
       </div>
     </div>
