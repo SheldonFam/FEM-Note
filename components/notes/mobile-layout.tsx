@@ -108,7 +108,7 @@ export function MobileLayout({
             </Button>
 
             <div className="flex items-center gap-2">
-              {selectedNote ? (
+              {selectedNote && (selectedNote.title || selectedNote.content) ? (
                 <>
                   <Button
                     type="button"
